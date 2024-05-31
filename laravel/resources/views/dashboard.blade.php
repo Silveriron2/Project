@@ -1,103 +1,94 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/pusher.css')}}">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- Include Pusher-js from CDN  -->
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script>
+        const token = localStorage.getItem('token');
+        if(!token){
+          window.location.href = '/';
         }
-        .header {
-            background-color: #007bff;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-        .footer {
-            background-color: #6c757d;
-            color: #fff;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-        }
-        .sidebar {
-            position: fixed;
-            width: 250px;
-            height: 100%;
-            background-color: #343a40;
-            padding-top: 80px;
-            overflow-y: auto;
-            color: #fff;
-        }
-        .sidebar h2 {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .sidebar ul {
-            padding: 0;
-            list-style: none;
-            text-align: center;
-        }
-        .sidebar ul li {
-            padding: 15px 0;
-        }
-        .sidebar ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-        .sidebar ul li a:hover {
-            background-color: #495057;
-            padding-left: 20px;
-            border-left: 5px solid #007bff;
-        }
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        .content h2 {
-            color: #007bff;
-            margin-bottom: 20px;
-        }
-        .content p {
-            font-size: 16px;
-            line-height: 1.6;
-        }
-    </style>
+    </script>
+    <script src="{{asset('assets/js/dashboard.js')}}"></script>
+    <script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('7db6f3da6e45856e1752', {
+      cluster: 'eu'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      alert(JSON.stringify(data));
+    });
+  </script>
 </head>
 <body>
 
 <div class="header">
-    <h1>Admin</h1>
+    <h1>PROJECT</h1>
 </div>
 
 <div class="sidebar">
     <h2>Menu</h2>
     <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#users">Users</a></li>
+        <li><a href="/users-home">Home</a></li>
+        <li><a href="profile">Profile</a></li>
+        <li><a href="/users">Users</a></li>
         <li><a href="#posts">Posts</a></li>
-        <li><a href="#log-out">Log-Out</a></li>
+        <li><button class="logout-button" onclick="openModal()">Log-Out</button></li>
     </ul>
 </div>
 
 <div class="content">
-    <h2>Dashboard - Welcome, Admin!</h2>
+     <main class="container-fluid vh-100 pb-4 mb-2">
+        @yield('content')
+    </main>
 </div>
 
-<div class="footer">
-    <p>&copy; Silverio Gwapo Kaayu. All rights reserved.</p>
+<!-- The modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to log out?</p>
+        <div class="button-container">
+            <button class="modal-button" onclick="logout()">Yes</button>
+            <button class="modal-button" onclick="closeModal()">No</button>
+        </div>
+    </div>
 </div>
+
+<script>
+    function openModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    }
+</script>
 
 </body>
 </html>
