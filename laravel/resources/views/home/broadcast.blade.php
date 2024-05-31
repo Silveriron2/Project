@@ -2,10 +2,8 @@
 @section('content')
 
     <div class="right message">
-        <div class="card">
             <p>{{$message}}</p>
-        <img src="" alt="" srcset="">
-        </div>    
+        <img src="{{asset('assets/image/user2.jng')}}" alt="waragud" srcset="">
     </div>
 
 @endsection

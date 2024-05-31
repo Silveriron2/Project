@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\PusherController;
 use App\Http\Controllers\UserController;
+use App\Events\PusherBroadcast;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,18 +23,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// });
 
-Route::get('home', [DashboardController::class, 'dashboard']);
+Route::get('/dashboard', [DashboardController::class, 'dashboard']);
 
 Route::get('/profile', [loginController::class, 'profile']);
 
 // Home //
-Route::get('/users-home', [HomeController::class, 'index']);
-Route::get('/users-broadcast', [PusherController::class, 'broadcast']);
-Route::get('/users-receive', [PusherController::class, 'receive']);
+Route::get('/users-home', [PusherController::class, 'index']);
+
 
 // User //
 Route::get('/users', [UserController::class, 'index']);
@@ -43,9 +43,8 @@ Route::get('/users/{id}/edit', [UserController::class, 'edit']);
 Route::get('/profile', [UserController::class, 'profile'])->name('profile');
 
 // Pusher //
-Route::get('/', [PusherController::class, 'index']);
-Route::get('/broadcast', [PusherController::class, 'broadcast']);
-Route::get('/receive', [PusherController::class, 'receive']);
+Route::post('/users-broadcast', [PusherController::class, 'broadcast']);
+Route::post('/users-receive', [PusherController::class, 'receive']);
 
 
 
